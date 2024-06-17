@@ -1,0 +1,110 @@
+image: gcc:latest
+
+stages:
+  - build
+
+compile_7_segment_display:
+  stage: build
+  script:
+    - gcc -c -Wall -Wextra -std=c99 source_code/7\ Segment-Display/gpio.c -o gpio.o
+    - gcc -c -Wall -Wextra -std=c99 source_code/7\ Segment-Display/display.c -o display.o
+  artifacts:
+    paths:
+      - gpio.o
+      - display.o
+
+compile_sensor:
+  stage: build
+  script:
+    - cp source_code/7\ Segment-Display/gpio.h source_code/sensor/
+    - cp source_code/7\ Segment-Display/display.h source_code/sensor/
+    - gcc -Wall -Wextra -std=c99 source_code/sensor/*.c source_code/7\ Segment-Display/gpio.c source_code/7\ Segment-Display/display.c -o sensor_program
+  artifacts:
+    paths:
+      - sensor_program
+
+compile_2_sensors_display:
+  stage: build
+  script:
+    - gcc -Wall -Wextra -std=c99 -Isource_code/7\ Segment-Display source_code/2\ sensors\ code/*.c source_code/7\ Segment-Display/gpio.c source_code/7\ Segment-Display/display.c -o 2_sensors_display
+
+compile_1_PIR:
+  stage: build
+  script:
+    - mkdir -p 1pir_programs
+    - cp source_code/D/1-PIR/* 1pir_programs/
+  artifacts:
+    paths:
+      - 1pir_programs/
+
+
+
+compile_2_PIRs:
+  stage: build
+  script:
+    - mkdir -p 2pirs_programs
+    - cp source_code/D/2PIRs/2pirs 2pirs_programs/
+  artifacts:
+    paths:
+      - 2pirs_programs/
+
+
+
+
+compile_LED:
+  stage: build
+  script:
+    - mkdir -p led_programs
+    - cp source_code/D/LED/* led_programs/
+  artifacts:
+    paths:
+      - led_programs/
+
+
+compile_LEDPIR:
+  stage: build
+  script:
+    - mkdir -p ledpir_programs
+    - cp source_code/D/LEDPIR/* ledpir_programs/
+  artifacts:
+    paths:
+      - ledpir_programs/
+
+compile_ULTRA:
+  stage: build
+  script:
+    - mkdir -p ultra_programs
+    - cp source_code/D/ULTRA/* ultra_programs/
+  artifacts:
+    paths:
+      - ultra_programs/
+
+
+
+compile_Webcam:
+  stage: build
+  script:
+    - cp source_code/Webcam/capture_video webcam_program
+  artifacts:
+    paths:
+      - webcam_program
+
+compile_Final:
+  stage: build
+  script:
+    - mkdir -p final_programs
+    - cd source_code/final
+    - find . -type d ! -name 'Final_Project_Media' -exec mkdir -p ../final_programs/{} \;
+    - find . -type f ! -path "./Final_Project_Media/*" -exec cp -t ../final_programs/ {} +
+  artifacts:
+    paths:
+      - final_programs/
+
+
+
+
+
+run_script:
+  stage: build
+  script:
+    - ./source_code/run_script.sh start  # Execute the script

@@ -1,0 +1,17 @@
+buildroot/
+Config.in
+external.mk
+external.desc
+configs/
+.config.*
+.config.old
+output/build/*
+output/.br2-*
+output/host/*
+output/target/*
+output/images/b*
+output/images/g*
+output/images/r*
+output/images/z*
+output/staging/
+output/..*
